@@ -1,10 +1,15 @@
 package org.melon.albumdbclient.model;
 
-public class Album {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+public class Album {
+@JsonProperty
     private String band;
+    @JsonProperty
     private String title;
+    @JsonProperty
     private String genre;
+    @JsonProperty
     private int releaseYear;
 
 

@@ -3,25 +3,46 @@ package org.melon.albumdbclient.actions;
 import org.melon.albumdbclient.model.Album;
 import org.melon.albumdbclient.utils.ConsoleInputProvider;
 import org.melon.albumdbclient.utils.Messages;
+import org.melon.albumdbclient.utils.ServerUtils;
 import org.melon.albumdbclient.utils.StringUtils;
 
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 public class AddRecord {
 
-   private List<Album> albums;
-   private PrintToConsole printToConsole;
+    private List<Album> albums;
+    private PrintToConsole printToConsole;
+    private ServerUtils serverUtils;
 
     public AddRecord(List<Album> albums) {
         this.albums = albums;
         this.printToConsole = new PrintToConsole();
+        this.serverUtils = new ServerUtils();
     }
 
-    private boolean isAlbumAlreadyInCollectionValidation(List<Album> albums, String band, String title) {
+    public AddRecord() {
+        this.albums = albums;
+        this.printToConsole = new PrintToConsole();
+        this.serverUtils = new ServerUtils();
+    }
+
+    public boolean isAlbumAlreadyInCollectionValidation( String band, String title) throws IOException {
+        List<String> test = serverUtils.findAllAlbums();
+        List<Album>mock = new LinkedList<>();
         boolean isAlbumAlreadyInCollection;
-        return isAlbumAlreadyInCollection = albums.stream().anyMatch(h -> h.getBand().equals(band) &&
+        System.out.println("-------------------------------");
+        test = serverUtils.findAllAlbums();
+        for (String t : test) {
+            System.out.println(t);
+        }
+
+        System.out.println("-------------------------------");
+        return isAlbumAlreadyInCollection = mock.stream().anyMatch(h -> h.getBand().equals(band) &&
                 h.getTitle().equals(title));
+
     }
 
     private void addAlbumToCollection(List<Album> albums, String band, String title, String genre, int releaseDate) {
@@ -54,7 +75,7 @@ public class AddRecord {
         return result;
     }
 
-    public void addRecordToDb(List<Album> albums) {
+    public void addRecordToDb() throws IOException {
 
         String band;
         String title;
@@ -72,7 +93,7 @@ public class AddRecord {
             title = readStringFromUserHandlingEmptyInput("Podaj tytuł płyty: ",
                     "Nie podano rzadnej nazwy płyty");
 
-            isAlbumAlreadyInCollection = isAlbumAlreadyInCollectionValidation(albums, band, title);
+           isAlbumAlreadyInCollection = isAlbumAlreadyInCollectionValidation(band, title);
 
             if (!isAlbumAlreadyInCollection) {
                 genre = readStringFromUserHandlingEmptyInput("Podaj gatunek wykonywanej muzyki: ",
@@ -82,9 +103,9 @@ public class AddRecord {
                         "Nie podano roku wydania płyty lub data wykracza poza możliwy relany historyczny zakres "
                         , 1887, actualYear);
 
-                addAlbumToCollection(albums, band, title, genre, releaseDate);
-                System.out.println("Dodano album do kolekcji: ");
-                printToConsole.printHeading();
+                serverUtils.addRecordToDatabase(band, title, genre, releaseDate);
+
+                System.out.println("Dodano do kolekcji album: ");
                 System.out.println(printToConsole.printHeading());
                 StringUtils.printSingleRecord(band, title, genre, releaseDate);
                 System.out.println(printToConsole.printEnding());
