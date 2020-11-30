@@ -2,21 +2,34 @@ package org.melon.albumdbclient.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.*;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.melon.albumdbclient.actions.PrintToConsole;
 import org.melon.albumdbclient.model.Album;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ServerUtils {
+    final String scheme = "http";
+    final String host = "localhost:8080";
+    final String path = "/server/api/database/";
+
+
+
+
     CloseableHttpClient httpClient = HttpClients.createDefault();
+    PrintToConsole printToConsole = new PrintToConsole();
+
+
 
     public List<String> findAllAlbums() throws IOException {
         List<String> AlbumsFromDb = new LinkedList<>();
@@ -25,6 +38,7 @@ public class ServerUtils {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
         }
+
         try {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
@@ -150,9 +164,14 @@ public class ServerUtils {
         StringEntity input = new StringEntity(json);
         postRequest.setEntity(input);
         CloseableHttpResponse response = httpClient.execute(postRequest);
-//        if (response.getStatusLine().getStatusCode() != 200) {
-//            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
-//        }
+        if (response.getStatusLine().getStatusCode() != 200) {
+            System.out.println("Wprowadzony album z podanym wykonawcą już istnieje na tej liście \n");
+        }else{
+            System.out.println("Dodano do kolekcji album: ");
+            System.out.println(printToConsole.printHeading());
+            StringUtils.printSingleRecord(band, title, genre, releaseYear);
+            System.out.println(printToConsole.printEnding());
+        }
         response.close();
 
     }
@@ -173,14 +192,35 @@ public class ServerUtils {
         response.close();
     }
 
-    public void deleteRecordFromDbById(int id) throws IOException {
-        HttpDelete deleteRequest = new HttpDelete("http://localhost:8080/server/api/database/delete_by_id/" + id);
+    public void deleteRecordFromDbById(int id) throws IOException,URISyntaxException {
+        String pathDelete = path+"delete_by_id/";
+        URI uri = new URIBuilder().setScheme(scheme).setHost(host).setPath(pathDelete).build();
+        HttpDelete deleteRequest = new HttpDelete(uri+String.valueOf(id));
         CloseableHttpResponse response = httpClient.execute(deleteRequest);
         try {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
-                HttpResponse deleteResponse = httpClient.execute(deleteRequest);
+//                HttpResponse deleteResponse = httpClient.execute(deleteRequest);
 
+            }
+        } finally {
+            response.close();
+        }
+    }
+    public void deleteRecordFromDbByTitle(String title) throws IOException, URISyntaxException {
+        String pathDelete = path+"delete_by_id/";
+        URI uri = new URIBuilder().setScheme(scheme).setHost(host).setPath(pathDelete).build();
+        HttpDelete deleteRequest = new HttpDelete(uri+title);
+        System.out.println(deleteRequest.getURI());
+        CloseableHttpResponse response = httpClient.execute(deleteRequest);
+        try {
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+
+
+            }
+            else{
+                System.out.println("Brak albumu w bazie danych");
             }
         } finally {
             response.close();
