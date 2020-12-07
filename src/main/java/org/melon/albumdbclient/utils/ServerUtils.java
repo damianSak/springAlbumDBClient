@@ -1,34 +1,32 @@
 package org.melon.albumdbclient.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.*;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.melon.albumdbclient.actions.PrintToConsole;
 import org.melon.albumdbclient.model.Album;
+import org.melon.albumdbclient.model.AlbumDbResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ServerUtils {
-    final String scheme = "http";
-    final String host = "localhost:8080";
-    final String path = "/server/api/database/";
-
-
+    final String adressPath = "http://localhost:8080/albumsdb/api/";
 
 
     CloseableHttpClient httpClient = HttpClients.createDefault();
     PrintToConsole printToConsole = new PrintToConsole();
-
 
 
     public List<String> findAllAlbums() throws IOException {
@@ -155,29 +153,34 @@ public class ServerUtils {
         }
     }
 
-    public void addRecordToDatabase(String band, String title, String genre, int releaseYear) throws IOException {
+    public void addRecordToDatabase(String band, String title, String genre, int releaseYear) throws IOException, JSONException {
 
-        HttpPost postRequest = new HttpPost("http://localhost:8080/server/api/database/add");
+        HttpPost postRequest = new HttpPost(adressPath + "add");
         postRequest.addHeader("Content-Type", "application/json");
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(new Album(band, title, genre, releaseYear));
         StringEntity input = new StringEntity(json);
         postRequest.setEntity(input);
         CloseableHttpResponse response = httpClient.execute(postRequest);
+        String serverResponse = EntityUtils.toString(response.getEntity());
+
         if (response.getStatusLine().getStatusCode() != 200) {
-            System.out.println("Wprowadzony album z podanym wykonawcą już istnieje na tej liście \n");
-        }else{
-            System.out.println("Dodano do kolekcji album: ");
+//            printMessageFromResponse(serverResponse);
+            parseJsonToGson(serverResponse);
+
+
+        } else {
+//           printMessageFromResponse(serverResponse);
+            parseJsonToGson(serverResponse);
             System.out.println(printToConsole.printHeading());
             StringUtils.printSingleRecord(band, title, genre, releaseYear);
             System.out.println(printToConsole.printEnding());
         }
         response.close();
-
     }
 
     public void updateWholeAlbum(int id, String band, String title, String genre, int releaseYear) throws IOException {
-        HttpPut putRequest = new HttpPut("http://localhost:8080/server/api/database/update/" + id);
+        HttpPut putRequest = new HttpPut(adressPath + id);
         putRequest.setHeader("Accept", "application/json");
         putRequest.setHeader("Content-Type", "application/json");
         ObjectMapper mapper = new ObjectMapper();
@@ -192,10 +195,9 @@ public class ServerUtils {
         response.close();
     }
 
-    public void deleteRecordFromDbById(int id) throws IOException,URISyntaxException {
-        String pathDelete = path+"delete_by_id/";
-        URI uri = new URIBuilder().setScheme(scheme).setHost(host).setPath(pathDelete).build();
-        HttpDelete deleteRequest = new HttpDelete(uri+String.valueOf(id));
+    public void deleteRecordFromDbById(int id) throws IOException, URISyntaxException {
+
+        HttpDelete deleteRequest = new HttpDelete(adressPath + String.valueOf(id));
         CloseableHttpResponse response = httpClient.execute(deleteRequest);
         try {
             HttpEntity entity = response.getEntity();
@@ -207,10 +209,9 @@ public class ServerUtils {
             response.close();
         }
     }
+
     public void deleteRecordFromDbByTitle(String title) throws IOException, URISyntaxException {
-        String pathDelete = path+"delete_by_id/";
-        URI uri = new URIBuilder().setScheme(scheme).setHost(host).setPath(pathDelete).build();
-        HttpDelete deleteRequest = new HttpDelete(uri+title);
+        HttpDelete deleteRequest = new HttpDelete(adressPath + title);
         System.out.println(deleteRequest.getURI());
         CloseableHttpResponse response = httpClient.execute(deleteRequest);
         try {
@@ -218,12 +219,25 @@ public class ServerUtils {
             if (entity != null) {
 
 
-            }
-            else{
+            } else {
                 System.out.println("Brak albumu w bazie danych");
             }
         } finally {
             response.close();
         }
     }
+
+    private void printMessageFromResponse(String jsonStr) throws JSONException {
+        String jsonString = jsonStr;
+        JSONObject jsonObj = new JSONObject(jsonString);
+        String message = jsonObj.getString("message");
+        System.out.println(message);
+    }
+
+    private void parseJsonToGson(String jsonStr){
+        Gson gson = new Gson();
+        AlbumDbResponse response = gson.fromJson(jsonStr,AlbumDbResponse.class);
+        System.out.println(response.getMessage());
+    }
+
 }
