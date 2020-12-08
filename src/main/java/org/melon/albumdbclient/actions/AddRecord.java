@@ -1,5 +1,6 @@
 package org.melon.albumdbclient.actions;
 
+import org.json.JSONException;
 import org.melon.albumdbclient.utils.ConsoleInputProvider;
 import org.melon.albumdbclient.utils.Messages;
 import org.melon.albumdbclient.utils.ServerUtils;
@@ -40,8 +41,9 @@ public class AddRecord {
         return result;
     }
 
-    public void addRecordToDb() throws IOException {
+    public void addRecordToDb() throws IOException, JSONException {
 
+        int id;
         String band;
         String title;
         String genre;
@@ -64,7 +66,11 @@ public class AddRecord {
                     "Nie podano roku wydania płyty lub data wykracza poza możliwy relany historyczny zakres "
                     , 1887, actualYear);
 
-                serverUtils.addRecordToDatabase(band, title, genre, releaseDate);
+            id = readIntFromUserHandlingEmptyInput("Podaj rok wydania albumu: ",
+                    "Nie podano roku wydania płyty lub data wykracza poza możliwy relany historyczny zakres "
+                    , 1887, actualYear);
+                serverUtils.addRecordToDatabase(id, band, title, genre, releaseDate);
+
 
             Messages.showEndingChooseMessage("dodać kolejną nową pozycję");
             choose = ConsoleInputProvider.readStringFromUserHandlingEmptyInput();

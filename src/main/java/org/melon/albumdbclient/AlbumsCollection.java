@@ -1,22 +1,22 @@
 package org.melon.albumdbclient;
 
-import org.melon.albumdbclient.actions.AddRecord;
-import org.melon.albumdbclient.actions.DeleteRecord;
-import org.melon.albumdbclient.actions.EditRecord;
-import org.melon.albumdbclient.actions.PrintToConsole;
+import org.json.JSONException;
+import org.melon.albumdbclient.actions.*;
 import org.melon.albumdbclient.utils.ConsoleInputProvider;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 
-public class AlbumsCollection  {
+public class AlbumsCollection {
 
     private AddRecord addRecord;
     private PrintToConsole printToConsole;
     private EditRecord editRecord;
     private DeleteRecord deleteRecord;
+    private FindRecord findRecord;
 
+    private static final String FIND = "wyszukaj";
     private static final String ADD = "dodaj";
     private static final String ADD_ALBUM = "dodaj album";
     private static final String PRINT = "drukuj";
@@ -39,14 +39,14 @@ public class AlbumsCollection  {
         this.deleteRecord = new DeleteRecord();
     }
 
-    public void start() throws IOException, URISyntaxException{
+    public void start() throws IOException, URISyntaxException, JSONException {
         String line;
 
         do {
             welcomMenu();
             line = ConsoleInputProvider.readStringFromUserHandlingEmptyInput().toLowerCase();
 
-             if (line.equals(ADD) || line.equals(ADD_ALBUM)) {
+            if (line.equals(ADD) || line.equals(ADD_ALBUM)) {
                 addRecord();
 //            } else if (line.equals(PRINT) || line.equals(PRINT_DB)) {
 //                printToConsole();
@@ -57,30 +57,34 @@ public class AlbumsCollection  {
             } else if (line.equals(EXIT)) {
                 ConsoleInputProvider.closeScanner();
                 break;
+            } else if (line.equals(FIND)) {
+                findRecord();
+                break;
             } else {
                 System.out.println("To nie jest poprawnie wybrana opcja z MENU, wpisz właściwą komendę: ");
             }
-        } while ( !line.toLowerCase().equals(EXIT));
+        } while (!line.toLowerCase().equals(EXIT));
     }
 
 
     private void endMessage() {
 
-       ConsoleInputProvider.waitForPresedEnter();
+        ConsoleInputProvider.waitForPresedEnter();
     }
 
     private void welcomMenu() {
         System.out.println("---------------------------");
-        System.out.println("1. Dodaj album do bazy");
-        System.out.println("2. Drukuj elementy bazy na konsoli");
-        System.out.println("3. Edytuj elementy bazy");
-        System.out.println("4. Usuń album z bazy");
-        System.out.println("5. Zakończ");
+        System.out.println("1. Wyszukaj albumy w bazie");
+        System.out.println("2. Dodaj album do bazy");
+        System.out.println("3. Drukuj elementy bazy na konsoli");
+        System.out.println("4. Edytuj elementy bazy");
+        System.out.println("5. Usuń album z bazy");
+        System.out.println("6. Zakończ");
         System.out.println("---------------------------");
         System.out.println("Wybierz opcję:");
     }
 
-    private void addRecord() throws IOException {
+    private void addRecord() throws IOException, JSONException {
         addRecord.addRecordToDb();
     }
 
@@ -93,8 +97,11 @@ public class AlbumsCollection  {
         editRecord.editAlbumFields();
     }
 
-    private void deleteRecord()throws IOException, URISyntaxException {
+    private void deleteRecord() throws IOException, URISyntaxException {
         deleteRecord.deleteRecordFromDb();
+    }
+    private void findRecord() throws IOException,URISyntaxException,JSONException{
+        findRecord.findRecord();
     }
 
 }
