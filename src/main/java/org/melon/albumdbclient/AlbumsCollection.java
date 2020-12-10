@@ -17,15 +17,17 @@ public class AlbumsCollection {
     private FindRecord findRecord;
 
     private static final String FIND = "wyszukaj";
+    private static final String FIND_NUMBER = "1";
     private static final String ADD = "dodaj";
-    private static final String ADD_ALBUM = "dodaj album";
+    private static final String ADD_NUMBER = "2";
     private static final String PRINT = "drukuj";
-    private static final String PRINT_DB = "drukuj bazę";
+    private static final String PRINT_DB = "3";
     private static final String EDIT = "edytuj";
-    private static final String EDIT_ELEMENTS = "edytuj elementy";
+    private static final String EDIT_NUMBER = "4";
     private static final String DELETE = "usuń";
-    private static final String DELETE_FROM_DB = "usuń z bazy";
+    private static final String DELETE_NUMBER = "5";
     private static final String EXIT = "zakończ";
+    private static final String EXIT_NUMBER = "6";
 
     public AlbumsCollection() {
         initializeActions();
@@ -37,6 +39,7 @@ public class AlbumsCollection {
         this.printToConsole = new PrintToConsole();
         this.editRecord = new EditRecord();
         this.deleteRecord = new DeleteRecord();
+        this.findRecord = new FindRecord();
     }
 
     public void start() throws IOException, URISyntaxException, JSONException {
@@ -46,19 +49,18 @@ public class AlbumsCollection {
             welcomMenu();
             line = ConsoleInputProvider.readStringFromUserHandlingEmptyInput().toLowerCase();
 
-            if (line.equals(ADD) || line.equals(ADD_ALBUM)) {
+            if (line.equals(ADD) || line.equals(ADD_NUMBER)) {
                 addRecord();
-//            } else if (line.equals(PRINT) || line.equals(PRINT_DB)) {
-//                printToConsole();
-            } else if (line.equals(EDIT) || line.equals(EDIT_ELEMENTS)) {
+            } else if (line.equals(PRINT) || line.equals(PRINT_DB)) {
+                printToConsole();
+            } else if (line.equals(EDIT) || line.equals(EDIT_NUMBER)) {
                 editRecord();
-            } else if (line.equals(DELETE) || line.equals(DELETE_FROM_DB)) {
+            } else if (line.equals(DELETE) || line.equals(DELETE_NUMBER)) {
                 deleteRecord();
-            } else if (line.equals(EXIT)) {
-                ConsoleInputProvider.closeScanner();
-                break;
-            } else if (line.equals(FIND)) {
+            } else if (line.equals(FIND)||line.equals(FIND_NUMBER)) {
                 findRecord();
+            } else if (line.equals(EXIT)||line.equals(EXIT_NUMBER)) {
+                ConsoleInputProvider.closeScanner();
                 break;
             } else {
                 System.out.println("To nie jest poprawnie wybrana opcja z MENU, wpisz właściwą komendę: ");
@@ -88,16 +90,16 @@ public class AlbumsCollection {
         addRecord.addRecordToDb();
     }
 
-//    private void printToConsole() {
-//        printToConsole.printAlbumsDbOnConsole();
-//        endMessage();
-//    }
+    private void printToConsole() throws IOException,JSONException{
+        printToConsole.printAllAlbumsFromDbOnconsle();
+        endMessage();
+    }
 
-    private void editRecord() {
+    private void editRecord() throws IOException,URISyntaxException,JSONException  {
         editRecord.editAlbumFields();
     }
 
-    private void deleteRecord() throws IOException, URISyntaxException {
+    private void deleteRecord() throws IOException, JSONException {
         deleteRecord.deleteRecordFromDb();
     }
     private void findRecord() throws IOException,URISyntaxException,JSONException{

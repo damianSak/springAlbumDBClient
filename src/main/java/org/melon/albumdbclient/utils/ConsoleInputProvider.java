@@ -42,7 +42,7 @@ public class ConsoleInputProvider {
     public static String readStringFromUserHandlingEmptyInput() {
         String string;
         do {
-            string = scanner.nextLine().trim();
+            string = scanner.next().trim();
             if (string.isEmpty()) {
                 System.out.println("Nie wprowadzono żadnego słowa");
             }

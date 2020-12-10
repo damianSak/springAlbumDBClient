@@ -43,7 +43,6 @@ public class AddRecord {
 
     public void addRecordToDb() throws IOException, JSONException {
 
-        int id;
         String band;
         String title;
         String genre;
@@ -58,7 +57,6 @@ public class AddRecord {
             title = readStringFromUserHandlingEmptyInput("Podaj tytuł płyty: ",
                     "Nie podano rzadnej nazwy płyty");
 
-//           isAlbumAlreadyInCollection = isAlbumAlreadyInCollectionValidation(band, title);
             genre = readStringFromUserHandlingEmptyInput("Podaj gatunek wykonywanej muzyki: ",
                     "Nie podano rzadnego gatunku");
 
@@ -66,10 +64,7 @@ public class AddRecord {
                     "Nie podano roku wydania płyty lub data wykracza poza możliwy relany historyczny zakres "
                     , 1887, actualYear);
 
-            id = readIntFromUserHandlingEmptyInput("Podaj rok wydania albumu: ",
-                    "Nie podano roku wydania płyty lub data wykracza poza możliwy relany historyczny zakres "
-                    , 1887, actualYear);
-                serverUtils.addRecordToDatabase(id, band, title, genre, releaseDate);
+                serverUtils.addRecordToDatabase( band, title, genre, releaseDate);
 
 
             Messages.showEndingChooseMessage("dodać kolejną nową pozycję");

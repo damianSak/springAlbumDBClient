@@ -1,24 +1,28 @@
 package org.melon.albumdbclient.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class Album {
-@JsonProperty
+
+    private int id;
     private String band;
-    @JsonProperty
     private String title;
-    @JsonProperty
     private String genre;
-    @JsonProperty
     private int releaseYear;
 
 
-
     public Album(String band, String title, String genre, int releaseYear) {
+
         this.band = band;
         this.title = title;
         this.genre = genre;
         this.releaseYear = releaseYear;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getBand() {

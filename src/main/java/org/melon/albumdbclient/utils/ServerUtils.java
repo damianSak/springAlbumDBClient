@@ -3,7 +3,6 @@ package org.melon.albumdbclient.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -11,187 +10,102 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.melon.albumdbclient.actions.PrintToConsole;
 import org.melon.albumdbclient.model.Album;
+import org.melon.albumdbclient.model.AlbumDbResponse;
 import org.melon.albumdbclient.model.AlbumsListResponse;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLDecoder;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ServerUtils {
 
 
-
     final String adressPath = "http://localhost:8080/albumsdb/api/";
     final String adressFindPath = adressPath + "find/";
+    final String adressUpdatePath = adressPath + "update/";
+    final String adressDeletePath = adressPath + "delete/";
 
+    CloseableHttpClient httpClient;
 
-    CloseableHttpClient httpClient = HttpClients.createDefault();
-    PrintToConsole printToConsole = new PrintToConsole();
+    public ServerUtils() {
 
-
-    public List<String> findAllAlbums() throws IOException {
-        List<String> AlbumsFromDb = new LinkedList<>();
-        HttpGet request = new HttpGet(adressPath + "find_all");
-        CloseableHttpResponse response = httpClient.execute(request);
-        if (response.getStatusLine().getStatusCode() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
-        }
-
-        try {
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-                String line = "";
-                while ((line = br.readLine()) != null) {
-                    AlbumsFromDb.add(line);
-
-                }
-            }
-        } finally {
-            response.close();
-        }
-        return AlbumsFromDb;
+        this.httpClient = HttpClients.createDefault();
     }
 
-//    public void findAlbumById(int albumID) throws IOException {
-//        HttpGet request = new HttpGet(adressFindPath + "id");
-//        CloseableHttpResponse response = httpClient.execute(request);
-//        if (response.getStatusLine().getStatusCode() != 200) {
-//            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
-//        }
-//        try {
-//            HttpEntity entity = response.getEntity();
-//            if (entity != null) {
-//                BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-//                String line;
-//                while ((line = br.readLine()) != null) {
-//                    System.out.println(line);
-//                }
-//            }
-//        } finally {
-//            response.close();
-//        }
-//    }
-
-//    public void findAlbumsByBandName(String band) throws IOException {
-//        HttpGet request = new HttpGet("http://localhost:8080/server/api/database/find/band/" + band);
-//        CloseableHttpResponse response = httpClient.execute(request);
-//        if (response.getStatusLine().getStatusCode() != 200) {
-//            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
-//        }
-//        try {
-//            HttpEntity entity = response.getEntity();
-////            if(entity !=null) {
-////                BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-////                String line;
-////                while ((line = br.readLine()) != null) {
-////                    System.out.println(line);
-////                }
-////            }
-//        } finally {
-//            response.close();
-//        }
-//    }
-//
-//    public void findAlbumsByTitle(String title) throws IOException {
-//        HttpGet request = new HttpGet("http://localhost:8080/server/api/database/find/title/" + title);
-//        CloseableHttpResponse response = httpClient.execute(request);
-//        if (response.getStatusLine().getStatusCode() != 200) {
-//            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
-//        }
-//        try {
-//            HttpEntity entity = response.getEntity();
-////            if(entity !=null) {
-////                BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-////                String line;
-////                while ((line = br.readLine()) != null) {
-////                    System.out.println(line);
-////                }
-////            }
-//        } finally {
-//            response.close();
-//        }
-//    }
-
-    public void findAlbumsByField(String field, String searchedParametr) throws IOException,URISyntaxException,JSONException {
-        String url2Decode = adressFindPath + field + "/" + searchedParametr;
-        String decodedURL = URLDecoder.decode(url2Decode, "UTF-8");
-        URL url = new URL(decodedURL);
-        URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
-        String decodedURLAsString = uri.toASCIIString();
-        HttpGet request = new HttpGet(decodedURLAsString);
+    public List<Album> findAllAlbums() throws IOException, JSONException {
+        List<Album> AlbumsFromDb = new LinkedList<>();
+        HttpGet request = new HttpGet(adressPath + "find_all");
         CloseableHttpResponse response = httpClient.execute(request);
         String serverResponse = EntityUtils.toString(response.getEntity());
-
-
         if (response.getStatusLine().getStatusCode() == 200) {
             printMessageFromResponse(serverResponse);
-            List<Album> albumsToPrintOnConsole = readListFromResponse(serverResponse);
-            printToConsole.printAlbumsDbOnConsole(albumsToPrintOnConsole);
-
-        }else{
-            System.out.println("Nic nie znaleziono");
+            AlbumsFromDb = readListFromResponse(serverResponse);
+        } else {
+            System.out.println("Jakiś błąd");
         }
 
         response.close();
-
+        return AlbumsFromDb;
     }
 
-//    public void findAlbumsByReleaseYear(int releaseYear) throws IOException {
-//        HttpGet request = new HttpGet("http://localhost:8080/server/api/database/find/releaseYear/" + releaseYear);
-//        CloseableHttpResponse response = httpClient.execute(request);
-//        if (response.getStatusLine().getStatusCode() != 200) {
-//            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
-//        }
-//        try {
-//            HttpEntity entity = response.getEntity();
-//            if (entity != null) {
-//                BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-//                String line;
-//                while ((line = br.readLine()) != null) {
-//                    System.out.println(line);
-//                }
-//            }
-//        } finally {
-//            response.close();
-//        }
-//    }
+    public List<Album> findAlbumsByField(String field, String searchedParametr) throws IOException, URISyntaxException, JSONException {
+        String url2Decode = adressFindPath + field + "/" + searchedParametr;
+
+        String decodedURLAsString = decodeURLAsString(url2Decode);
+
+        HttpGet request = new HttpGet(decodedURLAsString);
+        CloseableHttpResponse response = httpClient.execute(request);
+        String serverResponse = EntityUtils.toString(response.getEntity());
+        List<Album> albumsList = new ArrayList<>();
+        if (response.getStatusLine().getStatusCode() == 200) {
+            printMessageFromResponse(serverResponse);
+            albumsList = readListFromResponse(serverResponse);
+
+        } else {
+            System.out.println("jakiś błąd");
+        }
+        response.close();
+        return albumsList;
+    }
+
+//    public void updateAlbumField(String field, int Id, String newParameter) throws IOException, URISyntaxException, JSONException {
+//        String url2Decode = adressFindPath + field + "/" + Id;
+//        String decodedURL = URLDecoder.decode(url2Decode, "UTF-8");
+//        URL url = new URL(decodedURL);
+//        URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+//        String decodedURLAsString = uri.toASCIIString();
+//        HttpPut putRequest = new HttpPut(decodedURLAsString);
+//        ObjectMapper mapper = new ObjectMapper();
+//        String json = mapper.writeValueAsString(new Album(band, title, genre, releaseYear));
 //
-//    public void findAlbumsByGenre(String genre) throws IOException {
-//        HttpGet request = new HttpGet("http://localhost:8080/server/api/database/find/genre/" + genre);
-//        CloseableHttpResponse response = httpClient.execute(request);
-//        if (response.getStatusLine().getStatusCode() != 200) {
-//            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+//        StringEntity input = new StringEntity(json);
+//
+//        putRequest.setEntity(input);
+//
+//        CloseableHttpResponse response = httpClient.execute(putRequest);
+//        String serverResponse = EntityUtils.toString(response.getEntity());
+//        if (response.getStatusLine().getStatusCode() == 200) {
+//            printMessageFromResponse(serverResponse);
+//            List<Album> albumsToPrintOnConsole = readListFromResponse(serverResponse);
+//            printToConsole.printAlbumsDbListOnConsole(albumsToPrintOnConsole);
+//
+//        } else {
+//            printMessageFromResponse(serverResponse);
 //        }
-//        try {
-//            HttpEntity entity = response.getEntity();
-//            if (entity != null) {
-//                BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-//                String line;
-//                while ((line = br.readLine()) != null) {
-//                    System.out.println(line);
-//                }
-//            }
-//        } finally {
-//            response.close();
-//        }
+//        response.close();
 //    }
 
-    public void addRecordToDatabase(int id, String band, String title, String genre, int releaseYear) throws IOException, JSONException {
+    public void addRecordToDatabase(String band, String title, String genre, int releaseYear) throws IOException, JSONException {
 
         HttpPost postRequest = new HttpPost(adressPath + "add");
         postRequest.addHeader("Content-Type", "application/json");
 
         ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(new Album(id, band, title, genre, releaseYear));
+        String json = mapper.writeValueAsString(new Album(band, title, genre, releaseYear));
         StringEntity input = new StringEntity(json);
 
         postRequest.setEntity(input);
@@ -204,41 +118,51 @@ public class ServerUtils {
         } else {
             printMessageFromResponse(serverResponse);
 
-            System.out.println(printToConsole.printHeading());
-            StringUtils.printSingleRecord(id,band, title, genre, releaseYear);
-            System.out.println(printToConsole.printEnding());
+            Album albumFromResponse = readAlbumfomResponse(serverResponse);
+
+            StringUtils.printSingleRecordWithHeadingAndEnding(albumFromResponse.getId(), albumFromResponse.getTitle(),
+                    albumFromResponse.getBand(), albumFromResponse.getGenre(), albumFromResponse.getReleaseYear());
+
         }
         response.close();
     }
 
-    public void updateWholeAlbum(int id, String band, String title, String genre, int releaseYear) throws IOException {
-        HttpPut putRequest = new HttpPut(adressPath + id);
+    public void updateWholeAlbum(int id, String band, String title, String genre, int releaseYear) throws IOException, JSONException {
+        HttpPut putRequest = new HttpPut(adressUpdatePath + id);
         putRequest.setHeader("Accept", "application/json");
         putRequest.setHeader("Content-Type", "application/json");
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(new Album(id,band, title, genre, releaseYear));
-        StringEntity input = new StringEntity(json);
+
+        StringEntity input = mapObjectToJson(new Album(band, title, genre, releaseYear));
+
         putRequest.setEntity(input);
         CloseableHttpResponse response = httpClient.execute(putRequest);
+        String serverResponse = EntityUtils.toString(response.getEntity());
         if (response.getStatusLine().getStatusCode() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+            printMessageFromResponse(serverResponse);
+        } else {
+
         }
         response.close();
+
     }
 
-    public void deleteRecordById(int id) throws IOException, URISyntaxException {
 
-        HttpDelete deleteRequest = new HttpDelete(adressPath + String.valueOf(id));
+    public void deleteRecordById(int id) throws IOException, JSONException {
+
+        HttpDelete deleteRequest = new HttpDelete(adressDeletePath + id);
         CloseableHttpResponse response = httpClient.execute(deleteRequest);
-        try {
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-//                HttpResponse deleteResponse = httpClient.execute(deleteRequest);
+        String serverResponse = EntityUtils.toString(response.getEntity());
 
-            }
-        } finally {
-            response.close();
+        if (response.getStatusLine().getStatusCode() != 200) {
+            printMessageFromResponse(serverResponse);
+        } else {
+            printMessageFromResponse(serverResponse);
+            Album albumFromResponse = readAlbumfomResponse(serverResponse);
+            StringUtils.printSingleRecordWithHeadingAndEnding(albumFromResponse.getId(), albumFromResponse.getTitle(),
+                    albumFromResponse.getBand(), albumFromResponse.getGenre(), albumFromResponse.getReleaseYear());
         }
+        response.close();
+
     }
 
     private void printMessageFromResponse(String jsonStr) throws JSONException {
@@ -247,16 +171,16 @@ public class ServerUtils {
         System.out.println(message);
     }
 
-    private void parseJsonToGson(String jsonStr) {
+    private Album readAlbumfomResponse(String jsonStr) {
         Gson gson = new Gson();
-        AlbumsListResponse response = gson.fromJson(jsonStr, AlbumsListResponse.class);
-        System.out.println(response.getMessage());
+        AlbumDbResponse response = gson.fromJson(jsonStr, AlbumDbResponse.class);
+        Album album = response.getAlbum();
+        return album;
     }
 
-    private List<Album> readListFromResponse(String jsonStr) throws JsonProcessingException {
+    private List<Album> readListFromResponse(String jsonStr) {
         Gson gson = new Gson();
-
-        AlbumsListResponse response = gson.fromJson(jsonStr,AlbumsListResponse.class);
+        AlbumsListResponse response = gson.fromJson(jsonStr, AlbumsListResponse.class);
         List<Album> albumList = response.getAlbumList();
 //        Type listType = new TypeToken<List<Album>>(){}.getType();
 //
@@ -266,8 +190,21 @@ public class ServerUtils {
 //        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 //        AlbumsListResponse[] albums = objectMapper.readValue(jsonStr,AlbumsListResponse[].class);
 //        List<AlbumsListResponse>albumsListResponses = new ArrayList<>(Arrays.asList(albums));
+        return albumList;
+    }
 
-         return albumList;
+    private StringEntity mapObjectToJson(Album album) throws UnsupportedEncodingException, JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(album);
+        StringEntity input = new StringEntity(json);
+        return input;
+    }
+    private String decodeURLAsString(String urlToDecode) throws UnsupportedEncodingException, MalformedURLException,URISyntaxException {
+        String decodedURL = URLDecoder.decode(urlToDecode, "UTF-8");
+        URL url = new URL(decodedURL);
+        URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+        String decodedURLAsString = uri.toASCIIString();
+        return decodedURLAsString;
     }
 
 }
