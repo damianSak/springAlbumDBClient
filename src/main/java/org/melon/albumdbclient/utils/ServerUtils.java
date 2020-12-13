@@ -17,6 +17,7 @@ import org.melon.albumdbclient.model.AlbumsListResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -106,7 +107,7 @@ public class ServerUtils {
 
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(new Album(band, title, genre, releaseYear));
-        StringEntity input = new StringEntity(json);
+        StringEntity input = new StringEntity(json, Charset.forName("UTF-8"));
 
         postRequest.setEntity(input);
 
