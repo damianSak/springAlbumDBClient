@@ -37,28 +37,28 @@ public class EditRecord {
                 userChoice = ConsoleInputProvider.readStringFromUserWithEmptyInput();
                 if (!userChoice.toLowerCase().equals("")) {
                     albumToUpdate.setBand(userChoice);
-                    System.out.println("Zmieniono nazwę zespołu na: " + userChoice+"\n");
+                    System.out.println("Zmieniono nazwę zespołu na: " + userChoice + "\n");
                 }
                 System.out.println("Aktualna nazwa albumu to : " + albumToUpdate.getTitle());
                 System.out.println("Wprowadź nową nazwę albumu lub wprowadź 'N/n' i wciśnij ENTER aby pozostawić obecną i przejść dalej:");
                 userChoice = ConsoleInputProvider.readStringFromUserWithEmptyInput();
                 if (!userChoice.toLowerCase().equals("")) {
                     albumToUpdate.setTitle(userChoice);
-                    System.out.println("Zmieniono nazwę albumu na: " + userChoice+"\n");
+                    System.out.println("Zmieniono nazwę albumu na: " + userChoice + "\n");
                 }
                 System.out.println("Aktualny gatunek muzyki to : " + albumToUpdate.getGenre());
                 System.out.println("Wprowadź nową nazwę gatunku muzyki lub wprowadź 'N/n' i wciśnij ENTER aby pozostawić obecną i przejść dalej:");
                 userChoice = ConsoleInputProvider.readStringFromUserWithEmptyInput();
                 if (!userChoice.toLowerCase().equals("")) {
                     albumToUpdate.setGenre(userChoice);
-                    System.out.println("Zmieniono gatunek muzyki na: " + userChoice+"\n");
+                    System.out.println("Zmieniono gatunek muzyki na: " + userChoice + "\n");
                 }
                 System.out.println("Aktualny rok wydania albumu to : " + albumToUpdate.getReleaseYear());
                 System.out.println("Wprowadź nową nazwę zespołu lub wprowadź 'N/n' i wciśnij ENTER aby pozostawić obecną i przejść dalej:");
                 userChoice = ConsoleInputProvider.readStringFromUserWithEmptyInput();
                 if (!userChoice.toLowerCase().equals("")) {
                     albumToUpdate.setReleaseYear(Integer.parseInt(userChoice));
-                    System.out.println("Zmieniono rok wydania albumu na: " + userChoice+"\n");
+                    System.out.println("Zmieniono rok wydania albumu na: " + userChoice + "\n");
                 }
 
                 serverUtils.updateWholeAlbum(selectedAlbumID, albumToUpdate.getBand(), albumToUpdate.getTitle(),

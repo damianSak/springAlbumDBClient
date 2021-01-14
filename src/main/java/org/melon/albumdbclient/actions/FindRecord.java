@@ -14,8 +14,8 @@ import java.util.List;
 
 public class FindRecord {
 
-    ServerUtils serverUtils;
-    PrintToConsole printToConsole;
+   private ServerUtils serverUtils;
+    private PrintToConsole printToConsole;
 
     public FindRecord() {
         this.serverUtils = new ServerUtils();
@@ -32,7 +32,7 @@ public class FindRecord {
 
         String searchedParameter;
         String userChoice;
-        List<Album>albumsToPrint = new ArrayList<>();
+        List<Album> albumsToPrint = new ArrayList<>();
 
         do {
             System.out.println("Wpisz pole, po jakim chcesz odnaleźć albumy\n" +
@@ -45,41 +45,41 @@ public class FindRecord {
                 case "1":
                     System.out.println("Podaj ID albumu, który chcesz znaleźć:");
                     searchedParameter = ConsoleInputProvider.readStringFromUserHandlingEmptyInput();
-                   albumsToPrint= serverUtils.findAlbumsByField(ID, searchedParameter);
+                    albumsToPrint = serverUtils.findAlbumsByField(ID, searchedParameter);
 
                     break;
 
                 case "2":
                     System.out.println("Podaj nazwę zespołu, którego albumy chcesz znaleźć:");
                     searchedParameter = ConsoleInputProvider.readStringFromUserHandlingEmptyInput();
-                    albumsToPrint= serverUtils.findAlbumsByField(BAND, searchedParameter);
+                    albumsToPrint = serverUtils.findAlbumsByField(BAND, searchedParameter);
                     break;
 
                 case "3":
                     System.out.println("Podaj tytuł albumu, który  chcesz znaleźć:");
                     searchedParameter = ConsoleInputProvider.readStringFromUserHandlingEmptyInput();
-                    albumsToPrint= serverUtils.findAlbumsByField(TITLE, searchedParameter);
+                    albumsToPrint = serverUtils.findAlbumsByField(TITLE, searchedParameter);
                     break;
 
                 case "4":
                     System.out.println("Podaj gatunek muzyki, z którą albumy chcesz znaleźć:");
                     searchedParameter = ConsoleInputProvider.readStringFromUserHandlingEmptyInput();
-                   albumsToPrint = serverUtils.findAlbumsByField(GENRE, searchedParameter);
+                    albumsToPrint = serverUtils.findAlbumsByField(GENRE, searchedParameter);
                     break;
 
                 case "5":
                     System.out.println("Podaj rok, dla którego albumy chcesz znaleźć:");
                     searchedParameter = ConsoleInputProvider.readStringFromUserHandlingEmptyInput();
-                    albumsToPrint=  serverUtils.findAlbumsByField(RELEASE_YEAR, searchedParameter);
+                    albumsToPrint = serverUtils.findAlbumsByField(RELEASE_YEAR, searchedParameter);
                     break;
 
                 default:
                     System.out.println("Wprowadzona nazwa pozycji do wyszukiwania nie była poprawna");
                     break;
             }
-            if(!albumsToPrint.isEmpty()) {
+            if (!albumsToPrint.isEmpty()) {
                 printToConsole.printAlbumsDbListOnConsole(albumsToPrint);
-            }else{
+            } else {
                 System.out.println("\nNie znaleziono żadnych albumów\n");
             }
             albumsToPrint.clear();

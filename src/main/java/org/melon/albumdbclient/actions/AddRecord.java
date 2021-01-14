@@ -64,9 +64,7 @@ public class AddRecord {
                     "Nie podano roku wydania płyty lub data wykracza poza możliwy relany historyczny zakres "
                     , 1887, actualYear);
 
-                serverUtils.addRecordToDatabase( band, title, genre, releaseDate);
-
-
+            serverUtils.addRecordToDatabase(band, title, genre, releaseDate);
             Messages.showEndingChooseMessage("dodać kolejną nową pozycję");
             choose = ConsoleInputProvider.readStringFromUserHandlingEmptyInput();
         }

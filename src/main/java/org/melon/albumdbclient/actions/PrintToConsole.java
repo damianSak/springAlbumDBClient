@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PrintToConsole {
 
-    ServerUtils serverUtils;
+    private ServerUtils serverUtils;
 
     public PrintToConsole() {
         this.serverUtils = new ServerUtils();
@@ -26,14 +26,12 @@ public class PrintToConsole {
         StringUtils.printSingleRecord(album.getId(), album.getTitle(), album.getBand(), album.getGenre(), album.getReleaseYear());
     }
 
-
     public void printAlbumsDbListOnConsole(List<Album> albums) {
 
         System.out.println(StringUtils.returnHeading());
         printAlbumRecrds(albums);
         System.out.println(StringUtils.returnEnding());
     }
-
 
     public void printAllAlbumsFromDbOnconsle() throws IOException, JSONException {
         List<Album> albums = serverUtils.findAllAlbums();
