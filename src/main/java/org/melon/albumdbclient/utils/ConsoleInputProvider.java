@@ -1,17 +1,18 @@
 package org.melon.albumdbclient.utils;
 
 import java.io.IOException;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ConsoleInputProvider {
 
     static Scanner scanner = new Scanner(System.in);
 
+    public static void waitForPresedEnterWithMessage(String message) {
+        System.out.println(message);
+        waitForPresedEnter();
+    }
 
     public static void waitForPresedEnter() {
-
-        System.out.println("Wybrana operacja została zakończona, wciśnij ENTER aby powrócić do głównego MENU");
         try {
             int read = System.in.read(new byte[2]);
         } catch (IOException e) {
@@ -20,29 +21,25 @@ public class ConsoleInputProvider {
     }
 
     public static int readIntFromUserHandlingEmptyInput() {
-        int number = 0 ;
-        boolean isThereException;
+        int number = 0;
+        boolean exceptionOccurred;
         do {
             try {
-                isThereException= false;
-                number = scanner.nextInt();
+                exceptionOccurred = false;
+                number = Integer.parseInt(scanner.nextLine());
 
-                if(String.valueOf(number).length()==0){
-                    System.out.println("Nie wprowadzono żadnej liczby");
-                }
-            } catch (InputMismatchException e) {
-                isThereException = true;
-                System.out.println("Wprowadzona wartość nie jest liczbą całkowitą, podaj własciwą liczbę");
-                scanner.next();
+            } catch (NumberFormatException e) {
+                exceptionOccurred = true;
+                System.out.println("Wprowadzona wartość nie jest liczbą całkowitą lub nic nie wprowadzonio, podaj własciwą liczbę");
             }
-        } while (isThereException );
+        } while (exceptionOccurred);
         return number;
     }
 
     public static String readStringFromUserHandlingEmptyInput() {
         String string;
         do {
-            string = scanner.next().trim();
+            string = scanner.nextLine().trim();
             if (string.isEmpty()) {
                 System.out.println("Nie wprowadzono żadnego słowa");
             }
@@ -51,8 +48,13 @@ public class ConsoleInputProvider {
         return string;
     }
 
+    public static String readStringFromUserWithEmptyInput() {
+        String string;
+        string = scanner.nextLine().trim();
+        return string;
+    }
+
     public static void closeScanner() {
         scanner.close();
     }
-
 }
