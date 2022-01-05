@@ -1,0 +1,30 @@
+
+S	java:S106$"9Replace this use of System.out or System.err by a logger.(¶Öí¶øÿÿÿÿ
+Y
+java:S1155 ">Use isEmpty() to check whether the collection is empty or not.(¨›á…úÿÿÿÿ
+y
+java:S1157-"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(‚ãÁÑ
+~
+java:S1157J"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(ËÓüµúÿÿÿÿ
+N	java:S106="9Replace this use of System.out or System.err by a logger.(¸¼‡
+h
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(µÜØæ
+N	java:S106E"9Replace this use of System.out or System.err by a logger.(·òÒº
+y
+java:S1157&"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(‚ãÁÑ
+M	java:S1062"9Replace this use of System.out or System.err by a logger.(ËÃŠS
+S	java:S106*"9Replace this use of System.out or System.err by a logger.(¡ïçüÿÿÿÿ
+S	java:S1068"9Replace this use of System.out or System.err by a logger.(±˜Šøÿÿÿÿ
+S	java:S1061"9Replace this use of System.out or System.err by a logger.(ÖËß¶ÿÿÿÿÿ
+N	java:S106/"9Replace this use of System.out or System.err by a logger.(ÈÌ±‘
+S	java:S106B"9Replace this use of System.out or System.err by a logger.(ß¸‰èşÿÿÿÿ
+y
+java:S11574"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(‚ãÁÑ
+N	java:S106"9Replace this use of System.out or System.err by a logger.(ŞÚŸ
+S	java:S106("9Replace this use of System.out or System.err by a logger.(÷›ª®ùÿÿÿÿ
+N	java:S1066"9Replace this use of System.out or System.err by a logger.(×³Ãú
+y
+java:S1157;"cReplace these toUpperCase()/toLowerCase() and equals() calls with a single equalsIgnoreCase() call.(‚ãÁÑ
+S	java:S106#"9Replace this use of System.out or System.err by a logger.(¦Ì‹ıûÿÿÿÿ
+N	java:S1069"9Replace this use of System.out or System.err by a logger.(ºÂõ
+M	java:S106+"9Replace this use of System.out or System.err by a logger.(ÁãU

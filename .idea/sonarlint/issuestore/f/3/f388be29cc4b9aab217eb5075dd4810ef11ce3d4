@@ -1,0 +1,27 @@
+
+†
+java:S1488¬"jImmediately return this expression instead of assigning it to the temporary variable "decodedURLAsString".(ç¹ÿ ýÿÿÿÿ
+7
+java:S1170"!Make this final field static too.(ÚËŸÕ
+\
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(¶­š“ùÿÿÿÿ
+>	java:S108t")Either remove or fill this block of code.(å¥ž‡
+t
+java:S1488¢"]Immediately return this expression instead of assigning it to the temporary variable "input".(ÏÃ–¼
+<
+java:S1170"!Make this final field static too.(æ«£Úþÿÿÿÿ
+}
+java:S1488›"aImmediately return this expression instead of assigning it to the temporary variable "albumList".(ÀŽ£©ÿÿÿÿÿ
+S	java:S106E"9Replace this use of System.out or System.err by a logger.(ÿ°±²üÿÿÿÿ
+t
+java:S1488”"]Immediately return this expression instead of assigning it to the temporary variable "album".(¯ƒ´Ì
+7
+java:S1170"!Make this final field static too.(ÙØ†û
+T	java:S106Ž"9Replace this use of System.out or System.err by a logger.(øºÑûúÿÿÿÿ
+P
+java:S4719R":Replace Charset.forName() call with StandardCharsets.UTF_8(½“ƒô
+l
+java:S1192N"QDefine a constant instead of duplicating this literal "application/json" 3 times.(„üÀ‚ûÿÿÿÿ
+<
+java:S1170"!Make this final field static too.(¶­š“ùÿÿÿÿ
+S	java:S1060"9Replace this use of System.out or System.err by a logger.(é“é×ýÿÿÿÿ
