@@ -71,7 +71,7 @@ public class AlbumsCollection {
 
     private void endMessage() {
 
-        ConsoleInputProvider.waitForPresedEnter();
+        ConsoleInputProvider.waitForPressedEnterWithMessage("Wybrana operacja została zakończona, wciśnij ENTER aby powrócić do głównego MENU");
     }
 
     private void welcomMenu() {
@@ -91,7 +91,7 @@ public class AlbumsCollection {
     }
 
     private void printToConsole() throws IOException,JSONException{
-        printToConsole.printAllAlbumsFromDbOnconsle();
+        printToConsole.printAllAlbumsFromDbOnConsole();
         endMessage();
     }
 
@@ -99,7 +99,7 @@ public class AlbumsCollection {
         editRecord.editAlbumFields();
     }
 
-    private void deleteRecord() throws IOException, JSONException {
+    private void deleteRecord() throws IOException, JSONException,URISyntaxException {
         deleteRecord.deleteRecordFromDb();
     }
     private void findRecord() throws IOException,URISyntaxException,JSONException{

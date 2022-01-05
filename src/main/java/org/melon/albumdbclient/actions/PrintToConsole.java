@@ -16,31 +16,33 @@ public class PrintToConsole {
         this.serverUtils = new ServerUtils();
     }
 
-    protected void printAlbumRecrds(List<Album> albums) {
+    protected void printAlbumRecords(List<Album> albums) {
         for (Album album : albums) {
-            StringUtils.printSingleRecord(album.getId(), album.getTitle(), album.getBand(), album.getGenre(), album.getReleaseYear());
+            StringUtils.printSingleRecord(album.getId(), album.getTitle(), album.getBand(), album.getGenre(),
+                    album.getReleaseYear());
         }
     }
 
-    protected void printAlbumRecrds(Album album) {
-        StringUtils.printSingleRecord(album.getId(), album.getTitle(), album.getBand(), album.getGenre(), album.getReleaseYear());
+    protected void printAlbumRecords(Album album) {
+        StringUtils.printSingleRecord(album.getId(), album.getTitle(), album.getBand(), album.getGenre(),
+                album.getReleaseYear());
     }
 
     public void printAlbumsDbListOnConsole(List<Album> albums) {
 
         System.out.println(StringUtils.returnHeading());
-        printAlbumRecrds(albums);
+        printAlbumRecords(albums);
         System.out.println(StringUtils.returnEnding());
     }
 
-    public void printAllAlbumsFromDbOnconsle() throws IOException, JSONException {
+    public void printAllAlbumsFromDbOnConsole() throws IOException, JSONException {
         List<Album> albums = serverUtils.findAllAlbums();
         printAlbumsDbListOnConsole(albums);
     }
 
     public void printSingleAlbumsOnConsole(Album album) {
         System.out.println(StringUtils.returnHeading());
-        printAlbumRecrds(album);
+        printAlbumRecords(album);
         System.out.println(StringUtils.returnEnding());
     }
 

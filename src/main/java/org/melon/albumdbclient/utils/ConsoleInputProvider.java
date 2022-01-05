@@ -7,12 +7,12 @@ public class ConsoleInputProvider {
 
     static Scanner scanner = new Scanner(System.in);
 
-    public static void waitForPresedEnterWithMessage(String message) {
+    public static void waitForPressedEnterWithMessage(String message) {
         System.out.println(message);
-        waitForPresedEnter();
+        waitForPressedEnter();
     }
 
-    public static void waitForPresedEnter() {
+    public static void waitForPressedEnter() {
         try {
             int read = System.in.read(new byte[2]);
         } catch (IOException e) {
@@ -30,7 +30,8 @@ public class ConsoleInputProvider {
 
             } catch (NumberFormatException e) {
                 exceptionOccurred = true;
-                System.out.println("Wprowadzona wartość nie jest liczbą całkowitą lub nic nie wprowadzonio, podaj własciwą liczbę");
+                System.out.println("Wprowadzona wartość nie jest liczbą całkowitą lub nic nie wprowadzonio, " +
+                        "podaj własciwą liczbę");
             }
         } while (exceptionOccurred);
         return number;

@@ -16,7 +16,8 @@ public class AddRecord {
         this.serverUtils = new ServerUtils();
     }
 
-    private int readIntFromUserHandlingEmptyInput(String mainMessage, String exceptionMessage, int lowerConstraint, int upperConstraint) {
+    private int readIntFromUserHandlingEmptyInput(String mainMessage, String exceptionMessage,
+                                                  int lowerConstraint, int upperConstraint) {
         int number;
 
         do {
